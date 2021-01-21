@@ -4,7 +4,7 @@ import pygame
 import time
 import math
 
-playing = False
+playing = True
 
 def clamp(min_value, max_value, value):
     if value < min_value:
@@ -96,32 +96,20 @@ getTicksLastFrame = t
 
 pygame.mixer.music.load(filename)
 pygame.mixer.music.play(0)
-
+pygame.mixer.music.set_volume(0.05)
 
 
 smallfont = pygame.font.SysFont('Corbel',35)
 
-
 playPauseImage = pygame.image.load('playpause.png')
+
+onImage = pygame.image.load('on.png')
+offImage = pygame.image.load('off.png')
+
 
 # Run until the user asks to quit
 running = True
 while running:
-
-
-    
-    t = pygame.time.get_ticks()
-    deltaTime = (t - getTicksLastFrame) / 1000.0
-    getTicksLastFrame = t
-
-    # Did the user click the window close button?
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Fill the background with black
-    screen.fill((0, 0, 0))
-
 
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -131,36 +119,34 @@ while running:
     y = pygame.mouse.get_pos()[1]
     sqx = (x - 250)**2
     sqy = (y - 150)**2
-    if math.sqrt(sqx + sqy) < 75:
-        if(click[0]):
-            if(playing):
-                playing = False
-                pygame.mixer.music.pause()
-                time.sleep(0.1)
-            else:
-                playing = True
-                pygame.mixer.music.unpause()
-                time.sleep(0.1)
-        print('inside')
     
-    
-##    if 200 <= mouse[0] <= 200+100 and 200 <= mouse[1] <= 200+40:
-##        #pygame.draw.circle(screen,(255,0,0),[250,150],75)
-##        if(click[0]):
-##            if(playing):
-##                playing = False
-##                #pygame.draw.rect(screen,(255,0,0),[200,200,100,40])
-##                pygame.mixer.music.pause()
-##                time.sleep(0.1)
-##            else:
-##                playing = True
-##                pygame.mixer.music.unpause()
-##                time.sleep(0.1)       
-##    #else:
-##        #pygame.draw.rect(screen,(0,255,0),[200,200,100,40])
-##
+    t = pygame.time.get_ticks()
+    deltaTime = (t - getTicksLastFrame) / 1000.0
+    getTicksLastFrame = t
+
+    # Did the user click the window close button?
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if math.sqrt(sqx + sqy) < 75:
+                if(playing):
+                    playing = False
+                    pygame.mixer.music.pause()
+                    screen.blit(offImage,(0,0))
+                    print('off')
+                else:
+                    playing = True
+                    pygame.mixer.music.unpause()
+                    screen.blit(onImage,(0,0))
+                    print('on')
+
+
+    # Fill the background with black
+    screen.fill((0, 0, 0))
+
+
     screen.blit(playPauseImage,(150,50))
-##    #pygame.display.update()
 
     for b in bars:
         b.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, b.freq))
