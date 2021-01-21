@@ -67,8 +67,13 @@ frequencies_index_ratio = len(frequencies)/frequencies[len(frequencies)-1]
 def get_decibel(target_time, freq):
     return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
 
+icon = pygame.image.load("icon.png")
 
 pygame.init()
+pygame.display.set_caption("Music Visualizer")
+
+pygame.display.set_icon(icon)
+
 
 infoObject = pygame.display.Info()
 
@@ -115,8 +120,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Fill the background with white
-    screen.fill((255, 255, 255))
+    # Fill the background with black
+    screen.fill((0, 0, 0))
 
     for b in bars:
         b.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, b.freq))
