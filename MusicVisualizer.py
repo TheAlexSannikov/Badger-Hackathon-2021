@@ -1,8 +1,10 @@
 import librosa
 import numpy as np
 import pygame
+import time
+import math
 
-
+playing = False
 
 def clamp(min_value, max_value, value):
     if value < min_value:
@@ -98,12 +100,16 @@ pygame.mixer.music.play(0)
 
 
 smallfont = pygame.font.SysFont('Corbel',35)
-text = smallfont.render('hi',True,(255,255,255))
+
+
+playPauseImage = pygame.image.load('playpause.png')
 
 # Run until the user asks to quit
 running = True
 while running:
 
+
+    
     t = pygame.time.get_ticks()
     deltaTime = (t - getTicksLastFrame) / 1000.0
     getTicksLastFrame = t
@@ -118,14 +124,43 @@ while running:
 
 
     mouse = pygame.mouse.get_pos()
-
-    if screen_w/2 <= mouse[0] <= screen_w/2+140 and screen_h/2 <= mouse[1] <= screen_h/2+40:
-        pygame.draw.rect(screen,(255,0,0),[screen_w/2,screen_h/2,140,40])
-    else:
-        pygame.draw.rect(screen,(0,255,0),[screen_w/2,screen_h/2,140,40])
+    click = pygame.mouse.get_pressed()
     
-    screen.blit(text,(screen_w/2+50,screen_h/2))
-    #pygame.display.update()
+    pygame.draw.circle(screen,(255,0,0),[250,150],75)
+    x = pygame.mouse.get_pos()[0]
+    y = pygame.mouse.get_pos()[1]
+    sqx = (x - 250)**2
+    sqy = (y - 150)**2
+    if math.sqrt(sqx + sqy) < 75:
+        if(click[0]):
+            if(playing):
+                playing = False
+                pygame.mixer.music.pause()
+                time.sleep(0.1)
+            else:
+                playing = True
+                pygame.mixer.music.unpause()
+                time.sleep(0.1)
+        print('inside')
+    
+    
+##    if 200 <= mouse[0] <= 200+100 and 200 <= mouse[1] <= 200+40:
+##        #pygame.draw.circle(screen,(255,0,0),[250,150],75)
+##        if(click[0]):
+##            if(playing):
+##                playing = False
+##                #pygame.draw.rect(screen,(255,0,0),[200,200,100,40])
+##                pygame.mixer.music.pause()
+##                time.sleep(0.1)
+##            else:
+##                playing = True
+##                pygame.mixer.music.unpause()
+##                time.sleep(0.1)       
+##    #else:
+##        #pygame.draw.rect(screen,(0,255,0),[200,200,100,40])
+##
+    screen.blit(playPauseImage,(150,50))
+##    #pygame.display.update()
 
     for b in bars:
         b.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, b.freq))
