@@ -5,6 +5,7 @@ import math
 import tkinter as tk
 from tkinter import filedialog
 
+import os
 
 playing = True
 
@@ -113,11 +114,11 @@ pygame.mixer.music.play(0)
 pygame.mixer.music.set_volume(0.05)
 
 
-myFont = pygame.font.SysFont('Corbel',35)
-text = myFont.render('Some Text',False,(255,0,0))
+myFont = pygame.font.SysFont('Courier New',20)
+text = myFont.render('Now Playing: ' + os.path.basename(filePath),True,(255,255,255))
 
-playPauseImage = pygame.image.load('playpause.png')
-folderImage = pygame.image.load('folder.png')
+playPauseImage = pygame.image.load('playpause2.png')
+folderImage = pygame.image.load('folder2.png')
 
 
 
@@ -150,12 +151,10 @@ while running:
                 if(playing):
                     playing = False
                     pygame.mixer.music.pause()
-                    screen.blit(offImage,(0,0))
                     print('off')
                 else:
                     playing = True
                     pygame.mixer.music.unpause()
-                    screen.blit(onImage,(0,0))
                     print('on')
             if math.sqrt(sqx2+sqy2) < 60:
                 pygame.mixer.music.stop()
@@ -169,6 +168,7 @@ while running:
                 pygame.mixer.music.load(item)
                 pygame.mixer.music.play()
 
+                text = myFont.render('Now Playing: ' + os.path.basename(item),True,(255,255,255))
 
     # Fill the background with black
     screen.fill((0, 0, 0))
@@ -181,7 +181,7 @@ while running:
     
     screen.blit(playPauseImage,(150,50))
     screen.blit(folderImage,(360,100))
-    #screen.blit(text,(0,0))
+    screen.blit(text,(20,270))
 
     for b in bars:
         b.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, b.freq))
