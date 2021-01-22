@@ -159,7 +159,8 @@ while running:
             if math.sqrt(sqx2+sqy2) < 60:
                 pygame.mixer.music.stop()
                 item = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')])
-                time_series, sample_rate = librosa.load(item)  # getting information from the file
+                if(item != ''):
+                    time_series, sample_rate = librosa.load(item)  # getting information from the file
 
                 # getting a matrix which contains amplitude values according to frequency and time indexes
                 stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
