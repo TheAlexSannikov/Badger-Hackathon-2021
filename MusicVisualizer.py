@@ -162,12 +162,12 @@ while running:
                 if(item != ''):
                     time_series, sample_rate = librosa.load(item)  # getting information from the file
 
-                # getting a matrix which contains amplitude values according to frequency and time indexes
-                stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
-                spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
-                frequencies = librosa.core.fft_frequencies(n_fft=2048*4)  # getting an array of frequencies
-                pygame.mixer.music.load(item)
-                pygame.mixer.music.play()
+                    # getting a matrix which contains amplitude values according to frequency and time indexes
+                    stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
+                    spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
+                    frequencies = librosa.core.fft_frequencies(n_fft=2048*4)  # getting an array of frequencies
+                    pygame.mixer.music.load(item)
+                    pygame.mixer.music.play()
 
                 text = myFont.render('Now Playing: ' + os.path.basename(item),True,(255,255,255))
 
