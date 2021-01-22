@@ -1,10 +1,13 @@
 import librosa
 import numpy as np
 import pygame
-import time
 import math
+import tkinter as tk
+from tkinter import filedialog
+
 
 playing = True
+
 
 def clamp(min_value, max_value, value):
     if value < min_value:
@@ -36,10 +39,14 @@ class AudioBar:
         pygame.draw.rect(screen, self.color, (self.x, self.y + self.max_height - self.height, self.width, self.height))
 
 
-filename = "Ship Wrek  Zookeepers - Ark [NCS Release].wav"
+filename = "Alan Walker - Force [NCS Release].wav"
+filePath = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')])
 
 
-time_series, sample_rate = librosa.load(filename)  # getting information from the file
+
+
+
+time_series, sample_rate = librosa.load(filePath)  # getting information from the file
 
 # getting a matrix which contains amplitude values according to frequency and time indexes
 stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
@@ -55,6 +62,8 @@ frequencies_index_ratio = len(frequencies)/frequencies[len(frequencies)-1]
 def get_decibel(target_time, freq):
     return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
 
+
+
 icon = pygame.image.load("icon.png")
 
 pygame.init()
@@ -68,6 +77,11 @@ infoObject = pygame.display.Info()
 
 screen_w = int(infoObject.current_w/2.5)
 screen_h = int(infoObject.current_w/2.5)
+
+
+
+    
+
 
 # Set up the drawing window
 screen = pygame.display.set_mode([screen_w, screen_h])
@@ -94,23 +108,26 @@ for c in frequencies:
 t = pygame.time.get_ticks()
 getTicksLastFrame = t
 
-pygame.mixer.music.load(filename)
+pygame.mixer.music.load(filePath)
 pygame.mixer.music.play(0)
 pygame.mixer.music.set_volume(0.05)
 
 
-smallfont = pygame.font.SysFont('Corbel',35)
+myFont = pygame.font.SysFont('Corbel',35)
+text = myFont.render('Some Text',False,(255,0,0))
 
 playPauseImage = pygame.image.load('playpause.png')
+folderImage = pygame.image.load('folder.png')
 
-onImage = pygame.image.load('on.png')
-offImage = pygame.image.load('off.png')
+
 
 
 # Run until the user asks to quit
 running = True
 while running:
 
+    
+    
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     
@@ -140,13 +157,31 @@ while running:
                     pygame.mixer.music.unpause()
                     screen.blit(onImage,(0,0))
                     print('on')
+            if math.sqrt(sqx2+sqy2) < 60:
+                pygame.mixer.music.stop()
+                item = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')])
+                time_series, sample_rate = librosa.load(item)  # getting information from the file
+
+                # getting a matrix which contains amplitude values according to frequency and time indexes
+                stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
+                spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
+                frequencies = librosa.core.fft_frequencies(n_fft=2048*4)  # getting an array of frequencies
+                pygame.mixer.music.load(item)
+                pygame.mixer.music.play()
 
 
     # Fill the background with black
     screen.fill((0, 0, 0))
 
+    
 
+    pygame.draw.circle(screen,(0,0,0),[420,150],50) 
+    sqx2 = (x - 420)**2
+    sqy2 = (y - 150)**2
+    
     screen.blit(playPauseImage,(150,50))
+    screen.blit(folderImage,(360,100))
+    #screen.blit(text,(0,0))
 
     for b in bars:
         b.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, b.freq))
@@ -154,6 +189,8 @@ while running:
 
     # Flip the display
     pygame.display.flip()
+    
+
 
 # Done! Time to quit.
 pygame.quit()
