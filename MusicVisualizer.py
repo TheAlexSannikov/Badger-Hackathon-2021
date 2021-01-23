@@ -41,7 +41,7 @@ class AudioBar:
         pygame.draw.rect(screen, self.color, (self.x, self.y + self.max_height - self.height, self.width, self.height))
 
 
-filename = "ring.wav"
+filename = "silence.wav"
 #filePath = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')])
 
 
@@ -79,7 +79,13 @@ def get_background_color(background_color):
     else: return black
 
 def get_text_color(background_color):
-    return (255-background_color[0],255-background_color[1],255-background_color[2])
+    black = (0,0,0)
+    white = (255,255,255)
+    if background_color == black:
+        return white
+    else:
+        return black
+    #return (255-background_color[0],255-background_color[1],255-background_color[2])
 
 background_color = (0,0,0)
 text_color = get_background_color(background_color)
@@ -166,8 +172,9 @@ songName = ''
 running = True
 while running:
 
-    text = myFont.render('Now Playing: ',True,text_color)
-
+    #text = myFont.render('Now Playing: ',True,text_color)
+    
+    
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     
@@ -220,10 +227,12 @@ while running:
                     pygame.mixer.music.play()
                     
                 
-                text = myFont.render('Now Playing: ' + os.path.basename(item),True,(255,255,255))
+                text = myFont.render('Now Playing: ' + os.path.basename(item),True,text_color)
             elif math.sqrt(sqx3 + sqy3) < colorWheelRadius:
                 try:
+                    root2 = Tk()
                     bar_color = color()
+                    root2.destroy()
                 except Exception:
                     print(Exception)
             else:
@@ -235,7 +244,6 @@ while running:
     # Fill the background with black
     #screen.fill((0, 0, 0))
     screen.fill(background_color)
-
     
 
     pygame.draw.circle(screen,(0,0,0),[420,150],50) 
