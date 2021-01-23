@@ -1,3 +1,16 @@
+# This program is a music visualizer and player for .WAV files.
+# This project was created between 1/21/2021 and 1/23/2021 for the Badger Hackathon.
+
+# Authors: Nathanael Acker, Khalil Horton, Alex Sannikov
+# GitHub repository link: https://github.com/TheRealPiGuy/Badger-Hackathon-2021
+
+# Helpful Resources:
+    # Visualizer with Librosa and Pygame: https://medium.com/analytics-vidhya/how-to-create-a-music-visualizer-7fad401f5a69
+    # Player with Tkinter: https://kalebujordan.com/make-your-own-music-player-in-python/
+    # Pygame functions: https://www.pygame.org/docs/ref/music.html
+
+
+
 import librosa
 import numpy as np
 import pygame
@@ -6,6 +19,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import colorchooser
 import os
+
 
 playing = False # Global variable, represents if music is playing or not
 
@@ -42,11 +56,13 @@ class AudioBar:
 
 
 filename = "silence.wav"
-#filePath = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')])
+#filePath = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')]) # Use this line if you want
+                                                                                                       # to be prompted for a file
+                                                                                                       # instantly.
 
 
 
-#color wheel
+# Color Wheel
 bar_color = (71,159,161)
 colorWheelRadius = 50
 
@@ -58,7 +74,7 @@ def color():
     except Exception:
         return bar_color
 
-#background color stuff
+# Background Color Stuff
 def get_background_color(background_color):
     red = (255,0,0)
     orange = (255,127,0)
@@ -69,7 +85,7 @@ def get_background_color(background_color):
     violet = (148,0,211)
     black = (0,0,0)
     white = (255,255,255)
-    if background_color == black: return white
+    if background_color == black: return white # Set colors, and cycle between them for the background.
     #elif background_color == white: return red
     #elif background_color == red: return orange
     #elif background_color == orange: return yellow 
@@ -91,39 +107,39 @@ background_color = (0,0,0)
 text_color = get_background_color(background_color)
 
 
-time_series, sample_rate = librosa.load(filename)  # getting information from the file
+
+
+time_series, sample_rate = librosa.load(filename)  # getting information from the file # Based on: Medium article
 
 # getting a matrix which contains amplitude values according to frequency and time indexes
-stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
-spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
-frequencies = librosa.core.fft_frequencies(n_fft=2048*4)  # getting an array of frequencies
+stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4)) # Based on: Medium article
+spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix # Based on: Medium article
+frequencies = librosa.core.fft_frequencies(n_fft=2048*4)  # getting an array of frequencies # Based on: Medium article
 
 # getting an array of time periodic
-times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4)
-time_index_ratio = len(times)/times[len(times) - 1]
-frequencies_index_ratio = len(frequencies)/frequencies[len(frequencies)-1]
+times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4) # Based on: Medium article
+time_index_ratio = len(times)/times[len(times) - 1] # Based on: Medium article
+frequencies_index_ratio = len(frequencies)/frequencies[len(frequencies)-1] # Based on: Medium article
 
 
-def get_decibel(target_time, freq):
-    return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
+def get_decibel(target_time, freq): # Based on: Medium article
+    return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)] 
 
 
 
-icon = pygame.image.load("icon.png")
+
+icon = pygame.image.load("icon.png") # Set the window icon image
 
 pygame.init()
-pygame.display.set_caption("Music Visualizer")
+pygame.display.set_caption("Music Visualizer") # Set the window text
 pygame.display.set_icon(icon)
 
 
+infoObject = pygame.display.Info() # Based on: Medium article
 
 
-
-infoObject = pygame.display.Info()
-
-
-screen_w = int(infoObject.current_w/2.5)
-screen_h = int(infoObject.current_w/2.5)
+screen_w = int(infoObject.current_w/2.5) # Based on: Medium article
+screen_h = int(infoObject.current_w/2.5) # Based on: Medium article
 
 
 
@@ -132,42 +148,39 @@ screen_h = int(infoObject.current_w/2.5)
 
 # Set up the drawing window
 #screen = pygame.display.set_mode([screen_w, screen_h])
-screen = pygame.display.set_mode([500, 500])
+screen = pygame.display.set_mode([500, 500]) # Use this to make window size standard across all machines
 
-bars = []
+bars = [] # Based on: Medium article
 
+frequencies = np.arange(100, 8000, 100) # Based on: Medium article
 
-frequencies = np.arange(100, 8000, 100)
+r = len(frequencies) # Based on: Medium article
 
-r = len(frequencies)
+width = screen_w/r # Based on: Medium article
 
+x = (screen_w - width*r)/2 # Based on: Medium article
 
-width = screen_w/r
-
-
-x = (screen_w - width*r)/2
-
-for c in frequencies:
+for c in frequencies: # Based on: Medium article
     bars.append(AudioBar(x, 300, c, (71, 159, 161), max_height=250, width=width))
     x += width
 
-t = pygame.time.get_ticks()
-getTicksLastFrame = t
+t = pygame.time.get_ticks() # Based on: Medium article
+getTicksLastFrame = t # Based on: Medium article
 
+# Use these if you want to play the loaded music right away
 #pygame.mixer.music.load(filePath)
 #pygame.mixer.music.play(0)
 #pygame.mixer.music.set_volume(0.05)
 
 
-myFont = pygame.font.SysFont('Courier New',20)
-text = myFont.render('Now Playing: ',True,(255,255,255))
+myFont = pygame.font.SysFont('Courier New',20) # Set the text font and size
+text = myFont.render('Now Playing: ',True,(255,255,255)) # Set the actual text and color
 
-playPauseImage = pygame.image.load('playpause2.png')
-folderImage = pygame.image.load('folder2.png')
+playPauseImage = pygame.image.load('playpause2.png') # Load the play/pause image
+folderImage = pygame.image.load('folder2.png') # Load the folder image
 
 
-songName = ''
-
+# The while loop structure is based on the Medium article, and is fairly standard.
 # Run until the user asks to quit
 running = True
 while running:
@@ -192,27 +205,26 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN: # If mouse button is clicked (ONCE)
             if math.sqrt(sqx + sqy) < 75:
-                if(playing):
-                    playing = False
-                    pygame.mixer.music.pause()
-                    print('off')
+                if(playing): # If music is playing
+                    playing = False 
+                    pygame.mixer.music.pause() # Pause the music
+                    print('off') # Print to the console
                 else:
                     playing = True
-                    pygame.mixer.music.unpause()
+                    pygame.mixer.music.unpause() # Otherwise, play the music
                     print('on')
-            elif math.sqrt(sqx2+sqy2) < 60:
+            elif math.sqrt(sqx2+sqy2) < 60: # If mouse is over file button
                 root = Tk()
                 pygame.mixer.music.stop()
-                item = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')])
+                item = filedialog.askopenfilename(title="Select a Music File",filetypes=[(".WAV Files",'*.wav')]) # Prompt for .WAV file
                 
                 root.destroy()
-                if(item != ''):
+                if(item != ''): # This prevents an error if no file is selected
                     time_series, sample_rate = librosa.load(item)  # getting information from the file
-                    
-                    
-                    
+
+                    # Update variables for the audio bar
                     # getting a matrix which contains amplitude values according to frequency and time indexes
                     stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
                     spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
@@ -220,15 +232,14 @@ while running:
                     times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4)
                     time_index_ratio = len(times)/times[len(times) - 1]
                     frequencies_index_ratio = len(frequencies)/frequencies[len(frequencies)-1]
-
-                    
-                    
+       
                     pygame.mixer.music.load(item)
                     pygame.mixer.music.play()
                     
                 
-                text = myFont.render('Now Playing: ' + os.path.basename(item),True,text_color)
-            elif math.sqrt(sqx3 + sqy3) < colorWheelRadius:
+                text = myFont.render('Now Playing: ' + os.path.basename(item),True,text_color) # Change text to the file name
+                
+            elif math.sqrt(sqx3 + sqy3) < colorWheelRadius: # If over color wheel
                 try:
                     root2 = Tk()
                     bar_color = color()
@@ -245,11 +256,13 @@ while running:
     #screen.fill((0, 0, 0))
     screen.fill(background_color)
     
-
+    # Math for calculating circle/button areas
     pygame.draw.circle(screen,(0,0,0),[420,150],50) 
     sqx2 = (x - 420)**2
     sqy2 = (y - 150)**2
-    
+
+    # screen.blit adds images and text to the screen at the specified x/y values.
+    # (0,0) is top left of the window
     screen.blit(playPauseImage,(150,50))
     screen.blit(folderImage,(360,100))
     screen.blit(text,(20,270))
@@ -258,15 +271,16 @@ while running:
     sqy3 = (y - 150)**2
     colorWheel = pygame.image.load('colorWheel.png')
     screen.blit(colorWheel,(15,97))
-    
+
+    # Update the visualizer bars
+    # Mostly from Medium article, we added the color changer.
     for b in bars:
         b.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, b.freq),bar_color)
         b.render(screen)
 
-    # Flip the display
-    pygame.display.flip()
+    
+    pygame.display.flip() # Flip display (update)
     
 
 
-# Done! Time to quit.
-pygame.quit()
+pygame.quit() # Quit
