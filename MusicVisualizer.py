@@ -131,8 +131,8 @@ screen_h = int(infoObject.current_w/2.5)
 
 
 # Set up the drawing window
-screen = pygame.display.set_mode([screen_w, screen_h])
-
+#screen = pygame.display.set_mode([screen_w, screen_h])
+screen = pygame.display.set_mode([500, 500])
 
 bars = []
 
