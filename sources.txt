@@ -1,1 +1,11 @@
-color wheel: https://www.cleanpng.com/png-color-wheel-gamut-color-theory-colors-of-me-1994352/
+Image Sources:
+Color Wheel: https://www.cleanpng.com/png-color-wheel-gamut-color-theory-colors-of-me-1994352/
+Folder Icon: https://image.flaticon.com/icons/png/512/235/235251.png
+Window Icon: https://static.thenounproject.com/png/647227-200.png
+Play/Pause: https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Eo_circle_blue-grey_white_play-pause.svg/1200px-Eo_circle_blue-grey_white_play-pause.svg.png
+
+
+Code Resources:
+Visualizer with Librosa and Pygame: https://medium.com/analytics-vidhya/how-to-create-a-music-visualizer-7fad401f5a69
+Player with Tkinter: https://kalebujordan.com/make-your-own-music-player-in-python/
+Helpful Pygame functions: https://www.pygame.org/docs/ref/music.html
