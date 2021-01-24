@@ -253,8 +253,8 @@ while running:
 
 
     # Fill the background with black
-    #screen.fill((0, 0, 0))
-    screen.fill(background_color)
+    screen.fill((0, 0, 0))
+    #screen.fill(background_color)
     
     # Math for calculating circle/button areas
     pygame.draw.circle(screen,(0,0,0),[420,150],50) 
